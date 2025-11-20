@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnOrganize = document.getElementById('btn-organize');
     if (btnOrganize) {
         btnOrganize.addEventListener('click', () => {
-            alert("¡Próximamente: Panel de Organizador!");
+            window.location.href = 'organizar.html';
         });
     }
 
