@@ -1,20 +1,145 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Uvent</title>
-    <link rel="stylesheet" href="styles/style.css">
+    <title>UVENT - Organización de Eventos</title>
+    
+    <!-- CORRECCIÓN IMPORTANTE: -->
+    <!-- 1. Primero cargamos la librería de Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- 2. Después cargamos tu configuración (para que encuentre la variable 'tailwind') -->
+    <script src="js/tailwind-config.js"></script>
+    
+    <!-- Fuentes -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <!-- 3. Hoja de Estilos Externa -->
+    <link rel="stylesheet" href="css/styles.css">
 </head>
-<body>
-    <header class="header">
-        <div>
-            <h1 class="logo">UVENT</h1>
+<body class="bg-white text-gray-800 flex flex-col min-h-screen">
+
+    <!-- Navbar -->
+    <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex justify-between items-center w-full">
+        <div class="text-3xl font-bold tracking-widest text-black uppercase cursor-pointer">
+            UVENT
         </div>
-        <nav>
-            <a href="#" class="btnReg"><button>Registrarse</button></a>
-            <a href="#" class="btnLog"><button>Iniciar Sesión</button></a>
-        </nav>
-    </header>
+        <div class="flex gap-4">
+            <button id="btn-register" class="px-6 py-2 border border-gray-400 text-gray-600 hover:bg-gray-50 transition font-medium rounded-sm">
+                Registrarse
+            </button>
+            <button id="btn-login" class="px-6 py-2 bg-brand-purple text-white hover:bg-opacity-90 transition font-medium shadow-sm rounded-sm">
+                Iniciar Sesión
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20 w-full">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <!-- Left Content -->
+            <div>
+                <h1 class="text-4xl lg:text-5xl font-bold leading-tight text-black mb-6">
+                    Organizar eventos <br>
+                    es difícil, pero <span class="text-brand-green">no <br> tiene por qué serlo.</span>
+                </h1>
+                <p class="text-lg text-gray-700 mb-8 leading-relaxed">
+                    Uvent simplifica la organización de eventos universitarios, los hace flexibles y libres de estrés, para que puedas centrarte en crear experiencias inolvidables.
+                </p>
+                <button id="btn-organize" class="px-8 py-3 border-2 border-brand-green text-brand-green font-semibold text-lg hover:bg-brand-green hover:text-white transition duration-300 rounded-sm">
+                    Organizar Evento
+                </button>
+            </div>
+            
+            <!-- Right Image -->
+            <div class="relative">
+                <img src="img/img.png" 
+                     alt="Oradora en auditorio" 
+                     class="w-full h-[400px] object-cover shadow-lg rounded-sm hover:shadow-xl transition duration-500">
+            </div>
+        </div>
+    </section>
+
+    <!-- Events Section -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 mb-20 w-full bg-white">
+        <h2 class="text-3xl font-bold text-center mb-12">¡Eventos Cercanos!</h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="events-container">
+            
+            <!-- Card 1 -->
+            <div class="border-2 border-brand-green bg-brand-lightgreen flex flex-col card-hover">
+                <div class="relative h-48 bg-gray-200 overflow-hidden group">
+                    <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover opacity-80 group-hover:scale-105 transition duration-500">
+                    <div class="absolute inset-0 flex flex-col justify-center items-center bg-black bg-opacity-40 text-white text-center p-2">
+                        <h3 class="text-3xl font-bold italic tracking-tighter">TicSur</h3>
+                        <p class="text-xs mt-1 font-light">Conferencia y Tecnología</p>
+                        <p class="text-xs font-bold mt-2 border-t border-white pt-1">Organiza carrera del área de informática Sede Temuco</p>
+                    </div>
+                </div>
+                <div class="p-6 flex flex-col items-center text-center flex-grow">
+                    <h3 class="text-3xl font-bold mb-4">TicSur</h3>
+                    <div class="text-gray-800 space-y-1 mb-8 text-lg font-medium">
+                        <p>19 de Noviembre</p>
+                        <p>Av. Pedro de Valdivia</p>
+                        <p>Nº 0300, Temuco</p>
+                    </div>
+                    <button class="btn-subscribe w-3/4 bg-brand-green text-white font-medium py-3 hover:bg-opacity-90 transition shadow-md mt-auto rounded-sm" data-event="TicSur 19 Nov">
+                        Inscribirme
+                    </button>
+                </div>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="border-2 border-brand-green bg-brand-lightgreen flex flex-col card-hover">
+                <div class="relative h-48 bg-gray-200 overflow-hidden group">
+                    <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover opacity-80 group-hover:scale-105 transition duration-500">
+                    <div class="absolute inset-0 flex flex-col justify-center items-center bg-black bg-opacity-40 text-white text-center p-2">
+                        <h3 class="text-3xl font-bold italic tracking-tighter">TicSur</h3>
+                        <p class="text-xs mt-1 font-light">Conferencia y Tecnología</p>
+                        <p class="text-xs font-bold mt-2 border-t border-white pt-1">Organiza carrera del área de informática Sede Temuco</p>
+                    </div>
+                </div>
+                <div class="p-6 flex flex-col items-center text-center flex-grow">
+                    <h3 class="text-3xl font-bold mb-4">TicSur</h3>
+                    <div class="text-gray-800 space-y-1 mb-8 text-lg font-medium">
+                        <p>20 de Noviembre</p>
+                        <p>Av. Pedro de Valdivia</p>
+                        <p>Nº 0300, Temuco</p>
+                    </div>
+                    <button class="btn-subscribe w-3/4 bg-brand-green text-white font-medium py-3 hover:bg-opacity-90 transition shadow-md mt-auto rounded-sm" data-event="TicSur 20 Nov">
+                        Inscribirme
+                    </button>
+                </div>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="border-2 border-brand-green bg-brand-lightgreen flex flex-col card-hover">
+                <div class="relative h-48 bg-gray-200 overflow-hidden group">
+                    <img src="https://images.unsplash.com/photo-1517048676732-d65bc937f952?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover opacity-80 group-hover:scale-105 transition duration-500">
+                    <div class="absolute inset-0 flex flex-col justify-center items-center bg-black bg-opacity-40 text-white text-center p-2">
+                        <h3 class="text-3xl font-bold italic tracking-tighter">TicSur</h3>
+                        <p class="text-xs mt-1 font-light">Conferencia y Tecnología</p>
+                        <p class="text-xs font-bold mt-2 border-t border-white pt-1">Organiza carrera del área de informática Sede Temuco</p>
+                    </div>
+                </div>
+                <div class="p-6 flex flex-col items-center text-center flex-grow">
+                    <h3 class="text-3xl font-bold mb-4">TicSur</h3>
+                    <div class="text-gray-800 space-y-1 mb-8 text-lg font-medium">
+                        <p>21 de Noviembre</p>
+                        <p>Av. Pedro de Valdivia</p>
+                        <p>Nº 0300, Temuco</p>
+                    </div>
+                    <button class="btn-subscribe w-3/4 bg-brand-green text-white font-medium py-3 hover:bg-opacity-90 transition shadow-md mt-auto rounded-sm" data-event="TicSur 21 Nov">
+                        Inscribirme
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- 4. Script Lógico Externo -->
+    <script src="js/main.js" defer></script>
 </body>
 </html>

@@ -1,0 +1,19 @@
+/* Estilos personalizados adicionales para Uvent */
+
+body {
+    -webkit-font-smoothing: antialiased;
+    /* Asegura que las fuentes se vean nítidas */
+}
+
+/* Efecto suave para las tarjetas de eventos */
+.card-hover {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: default;
+}
+
+/* Al pasar el mouse, la tarjeta sube ligeramente y proyecta sombra */
+.card-hover:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+

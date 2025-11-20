@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión - UVENT</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="js/tailwind-config.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans min-h-screen flex flex-col">
+
+    <nav class="w-full py-6 text-center bg-white shadow-sm">
+        <a href="index.html" class="text-3xl font-bold tracking-widest text-black uppercase cursor-pointer hover:text-brand-green transition">
+            UVENT
+        </a>
+    </nav>
+
+    <main class="flex-grow flex items-center justify-center px-4 py-12">
+        <div class="bg-white p-8 rounded-sm shadow-lg max-w-md w-full border-t-4 border-brand-purple">
+            <h2 class="text-3xl font-bold text-center mb-2">Bienvenido</h2>
+            <p class="text-center text-gray-500 mb-8">Inicia sesión para continuar</p>
+
+            <form class="space-y-6" onsubmit="event.preventDefault(); alert('Sesión Iniciada (Simulación)'); window.location.href='index.html';">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Correo Electrónico</label>
+                    <input type="email" required class="w-full px-4 py-2 border border-gray-300 rounded-sm focus:ring-2 focus:ring-brand-purple focus:border-transparent outline-none transition">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Contraseña</label>
+                    <input type="password" required class="w-full px-4 py-2 border border-gray-300 rounded-sm focus:ring-2 focus:ring-brand-purple focus:border-transparent outline-none transition">
+                </div>
+
+                <div class="flex justify-end">
+                    <a href="#" class="text-sm text-brand-purple hover:underline">¿Olvidaste tu contraseña?</a>
+                </div>
+
+                <button type="submit" class="w-full bg-brand-purple text-white font-bold py-3 rounded-sm hover:bg-opacity-90 transition shadow-md">
+                    Iniciar Sesión
+                </button>
+            </form>
+            
+            <p class="text-center mt-6 text-sm text-gray-600">
+                ¿No tienes cuenta? <a href="registro.html" class="text-brand-purple font-semibold hover:underline">Regístrate aquí</a>
+            </p>
+        </div>
+    </main>
+
+</body>
+</html>
