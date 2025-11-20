@@ -10,6 +10,11 @@ body {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     cursor: default;
 }
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
 
 /* Al pasar el mouse, la tarjeta sube ligeramente y proyecta sombra */
 .card-hover:hover {
@@ -17,3 +22,26 @@ body {
     box-shadow: 0 10px 20px rgba(0,0,0,0.1);
 }
 
+/* Footer */
+footer {
+    background: #567aa0;
+    color: rgb(249, 243, 243);
+    text-align: center;
+    padding: 20px 0;
+    box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.1);
+}
+
+footer .social-icons a {
+    margin: 0 10px;
+}
+
+footer .social-icons img {
+    max-width: 24px;
+    vertical-align: middle;
+}
+
+footer small {
+    display: block;
+    margin-top: 10px;
+    font-size: 0.8em;
+}

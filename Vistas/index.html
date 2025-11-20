@@ -5,11 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UVENT - Organización de Eventos</title>
     
-    <!-- CORRECCIÓN IMPORTANTE: -->
-    <!-- 1. Primero cargamos la librería de Tailwind -->
+    <!-- 1. Librería Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- 2. Después cargamos tu configuración (para que encuentre la variable 'tailwind') -->
+    <!-- 2. Configuración de Tailwind -->
     <script src="js/tailwind-config.js"></script>
     
     <!-- Fuentes -->
@@ -22,7 +21,7 @@
 
     <!-- Navbar -->
     <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex justify-between items-center w-full">
-        <div class="text-3xl font-bold tracking-widest text-black uppercase cursor-pointer">
+        <div class="text-3xl font-bold tracking-widest text-black uppercase cursor-pointer" onclick="window.location.href='index.html'">
             UVENT
         </div>
         <div class="flex gap-4">
@@ -52,11 +51,13 @@
                 </button>
             </div>
             
-            <!-- Right Image -->
+            <!-- Right Image (Actualizada) -->
             <div class="relative">
                 <img src="img/img.png" 
                      alt="Oradora en auditorio" 
-                     class="w-full h-[400px] object-cover shadow-lg rounded-sm hover:shadow-xl transition duration-500">
+                     class="w-full h-[400px] object-cover shadow-lg rounded-sm hover:shadow-xl transition duration-500"
+                     onerror="this.src='https://images.unsplash.com/photo-1544531696-b8089a445745?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80'"> 
+                     <!-- He añadido un 'onerror' por si no tienes la imagen local aún -->
             </div>
         </div>
     </section>
@@ -84,8 +85,10 @@
                         <p>Av. Pedro de Valdivia</p>
                         <p>Nº 0300, Temuco</p>
                     </div>
-                    <button class="btn-subscribe w-3/4 bg-brand-green text-white font-medium py-3 hover:bg-opacity-90 transition shadow-md mt-auto rounded-sm" data-event="TicSur 19 Nov">
-                        Inscribirme
+                    <button class="btn-subscribe w-3/4 bg-brand-green text-white font-medium py-3 hover:bg-opacity-90 transition shadow-md mt-auto rounded-sm" 
+                            data-event="TicSur 19 Nov" 
+                            data-price="Gratis">
+                        Inscribirme - Gratis
                     </button>
                 </div>
             </div>
@@ -107,8 +110,10 @@
                         <p>Av. Pedro de Valdivia</p>
                         <p>Nº 0300, Temuco</p>
                     </div>
-                    <button class="btn-subscribe w-3/4 bg-brand-green text-white font-medium py-3 hover:bg-opacity-90 transition shadow-md mt-auto rounded-sm" data-event="TicSur 20 Nov">
-                        Inscribirme
+                    <button class="btn-subscribe w-3/4 bg-brand-green text-white font-medium py-3 hover:bg-opacity-90 transition shadow-md mt-auto rounded-sm" 
+                            data-event="TicSur 20 Nov" 
+                            data-price="Gratis">
+                        Inscribirme - Gratis
                     </button>
                 </div>
             </div>
@@ -130,14 +135,55 @@
                         <p>Av. Pedro de Valdivia</p>
                         <p>Nº 0300, Temuco</p>
                     </div>
-                    <button class="btn-subscribe w-3/4 bg-brand-green text-white font-medium py-3 hover:bg-opacity-90 transition shadow-md mt-auto rounded-sm" data-event="TicSur 21 Nov">
-                        Inscribirme
+                    <button class="btn-subscribe w-3/4 bg-brand-green text-white font-medium py-3 hover:bg-opacity-90 transition shadow-md mt-auto rounded-sm" 
+                            data-event="TicSur 21 Nov" 
+                            data-price="Gratis">
+                        Inscribirme - Gratis
                     </button>
                 </div>
             </div>
 
         </div>
     </section>
+
+    <!-- Footer con Estilos Tailwind -->
+    <footer class="bg-brand-dark text-white py-10 mt-auto">
+        <section id="contacto">
+            <div class="max-w-7xl mx-auto px-4 text-center">
+                
+                <h3 class="text-lg font-semibold mb-4 uppercase tracking-wider">Contáctanos</h3>
+                
+                <p class="text-gray-300 mb-6">
+                    Email: <a href="mailto:contacto@uvent.cl" class="text-brand-green hover:underline">contacto@uvent.cl</a> 
+                    <span class="mx-2">|</span> 
+                    Teléfono: <span class="text-gray-100">+569-76708832</span>
+                </p>
+                
+                <!-- Redes Sociales (Flexbox para alinear) -->
+                <div class="flex justify-center gap-6 mb-8">
+                    <a href="mailto:contacto@TechComputer.cl" class="hover:scale-110 transition transform">
+                        <img src="img/icons/email.png" alt="Correo" class="w-8 h-8">
+                    </a>
+                    <a href="#" target="_blank" class="hover:scale-110 transition transform">
+                        <img src="img/icons/Facebook.svg" alt="Facebook" class="w-8 h-8">
+                    </a>
+                    <a href="#" target="_blank" class="hover:scale-110 transition transform">
+                        <img src="img/icons/twitter.svg" alt="Twitter" class="w-8 h-8">
+                    </a>
+                    <a href="#" target="_blank" class="hover:scale-110 transition transform">
+                        <img src="img/icons/instagram.svg" alt="Instagram" class="w-8 h-8">
+                    </a>
+                    <a href="https://wa.me/56976708832" target="_blank" class="hover:scale-110 transition transform">
+                        <img src="img/icons/whatsapp.png" alt="WhatsApp" class="w-8 h-8">
+                    </a>
+                </div>
+
+                <div class="border-t border-gray-700 pt-6">
+                    <small class="text-gray-400 text-sm">&copy; 2025 UVENT - Servicios de Eventos Universitarios</small>
+                </div>
+            </div>
+        </section>
+    </footer>
 
     <!-- 4. Script Lógico Externo -->
     <script src="js/main.js" defer></script>
