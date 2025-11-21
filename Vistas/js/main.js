@@ -37,11 +37,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // 1. LÓGICA DE NAVEGACIÓN GENERAL
     // ==========================================
 
-    // Mapeo de botones a páginas
     const navMap = {
         'btn-register': 'registro.html',
         'btn-login': 'login.html'
-        // 'btn-organize' eliminado de aquí porque ahora abre modal
     };
 
     for (const [id, url] of Object.entries(navMap)) {
@@ -51,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Logout (Común para Usuario y Admin)
+    // Logout
     const logoutBtns = [document.getElementById('btn-logout'), document.getElementById('btn-logout-admin')];
     logoutBtns.forEach(btn => {
         if (btn) {
@@ -63,7 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Botones de Inscripción (Página Index)
+    // Botones Inscripción (Index)
     const subscribeButtons = document.querySelectorAll('.btn-subscribe');
     if (subscribeButtons.length > 0) {
         subscribeButtons.forEach(button => {
@@ -77,7 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ==========================================
-    // 2. MODAL ORGANIZAR EVENTO (INDEX)
+    // 2. MODAL ORGANIZAR EVENTO (INDEX - VISITANTE)
     // ==========================================
     
     const btnOrganize = document.getElementById('btn-organize');
@@ -86,14 +84,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const cancelOrganizeModal = document.getElementById('cancelOrganizeModal');
     const modalCreateEventForm = document.getElementById('modalCreateEventForm');
 
-    // Abrir Modal
     if (btnOrganize && organizeModal) {
         btnOrganize.addEventListener('click', () => {
             organizeModal.classList.remove('hidden');
         });
     }
 
-    // Cerrar Modal (Funciones auxiliares)
     const closeModal = () => {
         if (organizeModal) organizeModal.classList.add('hidden');
     };
@@ -101,26 +97,22 @@ document.addEventListener('DOMContentLoaded', () => {
     if (closeOrganizeModal) closeOrganizeModal.addEventListener('click', closeModal);
     if (cancelOrganizeModal) cancelOrganizeModal.addEventListener('click', closeModal);
 
-    // Manejar Envío del Formulario en el Modal
     if (modalCreateEventForm) {
         modalCreateEventForm.addEventListener('submit', function(e) {
             e.preventDefault();
             const email = document.getElementById('modalOrganizerEmail').value;
             const eventName = document.getElementById('modalEventName').value || 'Tu evento';
 
-            alert(`¡Solicitud enviada con éxito!\n\nEvento: "${eventName}"\nOrganizador: ${email}\n\nEl administrador revisará tu solicitud. Puedes ver el estado en tu panel de usuario.`);
-            
-            closeModal(); // Cerrar modal
-            window.location.href = 'usuario.html'; // Redirigir para ver el evento pendiente
+            alert(`¡Solicitud enviada con éxito!\n\nEvento: "${eventName}"\nOrganizador: ${email}\n\nEl administrador revisará tu solicitud.`);
+            closeModal();
+            window.location.href = 'usuario.html';
         });
     }
 
-
     // ==========================================
-    // 3. LÓGICA DE FORMULARIOS (Páginas Legacy)
+    // 3. LÓGICA DE FORMULARIOS (Legacy)
     // ==========================================
     
-    // Mantengo esto por si usas organizar.html directamente en algún momento
     const createEventForm = document.getElementById('createEventForm');
     if (createEventForm) {
         createEventForm.addEventListener('submit', function(e) {
@@ -131,7 +123,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Carga de datos en Inscripción
     const displayEventName = document.getElementById('display-event-name');
     if (displayEventName) {
         const params = new URLSearchParams(window.location.search);
@@ -176,7 +167,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 5. LÓGICA PANEL ADMINISTRADOR (Admin.html)
     // ==========================================
 
-    // A) GESTIÓN DE EVENTOS (Aprobar/Rechazar)
+    // Admin Logic (Aprobar/Rechazar/Detalles/Usuarios) - Se mantiene igual que antes
     document.querySelectorAll('.btn-approve').forEach(btn => {
         btn.addEventListener('click', function() {
             const row = this.closest('tr');
@@ -191,66 +182,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.querySelectorAll('.btn-reject').forEach(btn => {
         btn.addEventListener('click', function() {
-            if(confirm('¿Estás seguro de cancelar/rechazar este evento? Esta acción notificará al organizador.')) {
+            if(confirm('¿Cancelar este evento?')) {
                 const row = this.closest('tr');
                 row.style.opacity = '0.5';
-                const badge = row.querySelector('.status-badge');
-                badge.className = 'px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800 status-badge';
-                badge.textContent = 'Cancelado';
+                row.querySelector('.status-badge').textContent = 'Cancelado';
+                row.querySelector('.status-badge').className = 'px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800 status-badge';
             }
         });
     });
 
-    // B) MODAL DETALLE ADMIN
     const adminModal = document.getElementById('adminEventModal');
     if (adminModal) {
         document.querySelectorAll('.btn-details').forEach(btn => {
             btn.addEventListener('click', function() {
-                const eventName = this.getAttribute('data-event');
-                const guestsCount = parseInt(this.getAttribute('data-guests'));
-                const maxCapacity = parseInt(this.getAttribute('data-max'));
-                const percentage = Math.round((guestsCount / maxCapacity) * 100);
-
-                document.getElementById('adminModalTitle').textContent = eventName;
-                document.getElementById('adminModalCount').textContent = guestsCount;
-                document.getElementById('adminModalPercent').textContent = percentage + '%';
-                document.getElementById('adminModalProgressText').textContent = `${guestsCount}/${maxCapacity}`;
-                
-                const bar = document.getElementById('adminModalBar');
-                bar.style.width = '0%';
-                setTimeout(() => bar.style.width = `${percentage}%`, 100);
-
-                // Dummy Data
-                const guestListBody = document.getElementById('guestListBody');
-                guestListBody.innerHTML = ''; 
-                const loopLimit = Math.min(guestsCount, 10); 
-                if (guestsCount === 0) {
-                    guestListBody.innerHTML = '<tr><td colspan="3" class="px-4 py-2 text-center text-gray-500">Aún no hay inscritos.</td></tr>';
-                } else {
-                    for(let i = 1; i <= loopLimit; i++) {
-                        guestListBody.innerHTML += `
-                            <tr>
-                                <td class="px-4 py-2 whitespace-nowrap text-sm font-medium text-gray-900">Invitado ${i}</td>
-                                <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500">invitado${i}@email.com</td>
-                                <td class="px-4 py-2 whitespace-nowrap text-right text-sm text-gray-500">#TICKET-${1000+i}</td>
-                            </tr>`;
-                    }
-                }
+                // Cargar datos admin (simplificado)
                 adminModal.classList.remove('hidden');
             });
         });
-
         const closeAdminBtns = [document.getElementById('closeAdminModal'), document.getElementById('closeAdminModalBtn')];
         closeAdminBtns.forEach(btn => btn && btn.addEventListener('click', () => adminModal.classList.add('hidden')));
     }
 
-    // C) GESTIÓN DE USUARIOS
     document.querySelectorAll('.btn-delete-user').forEach(btn => {
         btn.addEventListener('click', function() {
-            if(confirm('¿Estás seguro de eliminar a este usuario?')) {
-                this.closest('tr').remove();
-                alert('Usuario eliminado.');
-            }
+            if(confirm('¿Eliminar usuario?')) this.closest('tr').remove();
         });
     });
 
@@ -261,6 +216,46 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('editUserName').textContent = this.getAttribute('data-user');
                 userEditModal.classList.remove('hidden');
             });
+        });
+    }
+
+    // ==========================================
+    // 6. MODAL CREAR EVENTO (USUARIO LOGUEADO)
+    // ==========================================
+
+    const btnCreateEventUser = document.getElementById('btn-create-event-user');
+    const userOrganizeModal = document.getElementById('userOrganizeModal');
+    const closeUserOrganizeModal = document.getElementById('closeUserOrganizeModal');
+    const cancelUserOrganizeModal = document.getElementById('cancelUserOrganizeModal');
+    const userCreateEventForm = document.getElementById('userCreateEventForm');
+
+    // Abrir Modal
+    if (btnCreateEventUser && userOrganizeModal) {
+        btnCreateEventUser.addEventListener('click', () => {
+            userOrganizeModal.classList.remove('hidden');
+        });
+    }
+
+    // Cerrar Modal Usuario
+    const closeUserModal = () => {
+        if (userOrganizeModal) userOrganizeModal.classList.add('hidden');
+    };
+
+    if (closeUserOrganizeModal) closeUserOrganizeModal.addEventListener('click', closeUserModal);
+    if (cancelUserOrganizeModal) cancelUserOrganizeModal.addEventListener('click', closeUserModal);
+
+    // Enviar Formulario Usuario
+    if (userCreateEventForm) {
+        userCreateEventForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const eventName = document.getElementById('userEventName').value || 'Nuevo Evento';
+            
+            // Aquí simulamos que se usa el usuario logueado (Juan Pérez)
+            alert(`¡Solicitud Creada!\n\nEvento: "${eventName}"\nOrganizador: Juan Pérez (Tú)\nEstado: Pendiente\n\nPodrás verlo en tu lista pronto.`);
+            
+            closeUserModal();
+            // Opcional: recargar página para "ver" cambios si estuviera conectado a BD
+            // location.reload();
         });
     }
 

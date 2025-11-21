@@ -6,47 +6,67 @@
     <title>Iniciar Sesión - UVENT</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="js/tailwind-config.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/styles.css">
+    <link href="css/styles.css" rel="stylesheet">
 </head>
-<body class="bg-gray-50 text-gray-800 font-sans min-h-screen flex flex-col">
+<body class="h-screen w-full flex overflow-hidden bg-white">
 
-    <nav class="w-full py-6 text-center bg-white shadow-sm">
-        <a href="index.html" class="text-3xl font-bold tracking-widest text-black uppercase cursor-pointer hover:text-brand-green transition">
-            UVENT
-        </a>
-    </nav>
+    <!-- Lado Izquierdo: Imagen / Branding -->
+    <div class="hidden lg:flex w-1/2 bg-brand-dark relative items-center justify-center overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-br from-brand-purple to-brand-dark opacity-90 z-10"></div>
+        <img src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" class="absolute inset-0 w-full h-full object-cover filter grayscale mix-blend-overlay">
+        
+        <div class="relative z-20 text-white p-12 text-center">
+            <h1 class="text-5xl font-bold tracking-widest mb-4 brand-font">UVENT</h1>
+            <p class="text-xl font-light text-gray-200">La plataforma líder en gestión de eventos universitarios.</p>
+        </div>
+    </div>
 
-    <main class="flex-grow flex items-center justify-center px-4 py-12">
-        <div class="bg-white p-8 rounded-sm shadow-lg max-w-md w-full border-t-4 border-brand-purple">
-            <h2 class="text-3xl font-bold text-center mb-2">Bienvenido</h2>
-            <p class="text-center text-gray-500 mb-8">Inicia sesión para continuar</p>
+    <!-- Lado Derecho: Formulario -->
+    <div class="w-full lg:w-1/2 flex items-center justify-center p-8 fade-in">
+        <div class="w-full max-w-md space-y-8">
+            <div class="text-center lg:text-left">
+                <a href="index.html" class="text-brand-purple font-bold text-2xl lg:hidden mb-8 block">UVENT</a>
+                <h2 class="text-3xl font-bold text-gray-900">Bienvenido de nuevo</h2>
+                <p class="mt-2 text-sm text-gray-600">Por favor ingresa tus credenciales para continuar.</p>
+            </div>
 
-            <form class="space-y-6" onsubmit="event.preventDefault(); alert('Sesión Iniciada (Simulación)'); window.location.href='index.html';">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Correo Electrónico</label>
-                    <input type="email" required class="w-full px-4 py-2 border border-gray-300 rounded-sm focus:ring-2 focus:ring-brand-purple focus:border-transparent outline-none transition">
+            <form class="mt-8 space-y-6" onsubmit="event.preventDefault(); alert('Sesión Iniciada (Simulación)'); window.location.href='index.html';">
+                <div class="space-y-5">
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700">Correo Electrónico</label>
+                        <input id="email" name="email" type="email" required class="mt-1 appearance-none rounded-lg relative block w-full px-4 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-purple focus:border-transparent transition sm:text-sm" placeholder="nombre@ejemplo.com">
+                    </div>
+                    <div>
+                        <label for="password" class="block text-sm font-medium text-gray-700">Contraseña</label>
+                        <input id="password" name="password" type="password" required class="mt-1 appearance-none rounded-lg relative block w-full px-4 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-purple focus:border-transparent transition sm:text-sm" placeholder="••••••••">
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <input id="remember-me" name="remember-me" type="checkbox" class="h-4 w-4 text-brand-purple focus:ring-brand-purple border-gray-300 rounded">
+                        <label for="remember-me" class="ml-2 block text-sm text-gray-900">Recordarme</label>
+                    </div>
+                    <div class="text-sm">
+                        <a href="#" class="font-medium text-brand-purple hover:text-purple-800">¿Olvidaste tu contraseña?</a>
+                    </div>
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Contraseña</label>
-                    <input type="password" required class="w-full px-4 py-2 border border-gray-300 rounded-sm focus:ring-2 focus:ring-brand-purple focus:border-transparent outline-none transition">
+                    <button type="submit" class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-brand-purple hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-purple shadow-lg hover:shadow-xl transition duration-300 transform hover:-translate-y-0.5">
+                        Iniciar Sesión
+                    </button>
                 </div>
-
-                <div class="flex justify-end">
-                    <a href="#" class="text-sm text-brand-purple hover:underline">¿Olvidaste tu contraseña?</a>
-                </div>
-
-                <button type="submit" class="w-full bg-brand-purple text-white font-bold py-3 rounded-sm hover:bg-opacity-90 transition shadow-md">
-                    Iniciar Sesión
-                </button>
             </form>
-            
-            <p class="text-center mt-6 text-sm text-gray-600">
-                ¿No tienes cuenta? <a href="registro.html" class="text-brand-purple font-semibold hover:underline">Regístrate aquí</a>
+
+            <p class="mt-2 text-center text-sm text-gray-600">
+                ¿No tienes una cuenta?
+                <a href="registro.html" class="font-medium text-brand-purple hover:text-purple-800 transition">
+                    Regístrate gratis
+                </a>
             </p>
         </div>
-    </main>
+    </div>
 
 </body>
 </html>

@@ -1,47 +1,67 @@
 /* Estilos personalizados adicionales para Uvent */
 
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap');
+
 body {
+    font-family: 'Inter', sans-serif; /* Inter es muy usada en interfaces profesionales */
     -webkit-font-smoothing: antialiased;
-    /* Asegura que las fuentes se vean nítidas */
+    background-color: #f8fafc; /* Gris azulado muy suave para el fondo general */
 }
 
-/* Efecto suave para las tarjetas de eventos */
-.card-hover {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    cursor: default;
-}
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
+h1, h2, h3, h4, .brand-font {
+    font-family: 'Poppins', sans-serif;
 }
 
-/* Al pasar el mouse, la tarjeta sube ligeramente y proyecta sombra */
-.card-hover:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+/* Animación de entrada suave */
+.fade-in {
+    animation: fadeIn 0.5s ease-out forwards;
+    opacity: 0;
+    transform: translateY(10px);
 }
 
-/* Footer */
-footer {
-    background: #567aa0;
-    color: rgb(249, 243, 243);
-    text-align: center;
-    padding: 20px 0;
-    box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.1);
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
-footer .social-icons a {
-    margin: 0 10px;
+/* Tarjetas Profesionales */
+.card-pro {
+    background: white;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    transition: all 0.3s ease;
 }
 
-footer .social-icons img {
-    max-width: 24px;
-    vertical-align: middle;
+.card-pro:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    border-color: #cbd5e1;
 }
 
-footer small {
-    display: block;
-    margin-top: 10px;
-    font-size: 0.8em;
+/* Scrollbar personalizada */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+::-webkit-scrollbar-track {
+    background: #f1f5f9; 
+}
+::-webkit-scrollbar-thumb {
+    background: #cbd5e1; 
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8; 
+}
+
+/* Badges de estado */
+.badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 }

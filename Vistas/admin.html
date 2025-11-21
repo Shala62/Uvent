@@ -3,217 +3,278 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Administración - UVENT</title>
+    <title>Admin Panel - UVENT</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="js/tailwind-config.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/styles.css">
+    <link href="css/styles.css" rel="stylesheet">
+    <!-- Iconos -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
-<body class="bg-gray-100 text-gray-800 font-sans min-h-screen flex flex-col">
+<body class="bg-gray-50 text-gray-800 h-screen flex flex-col overflow-hidden">
 
-    <!-- Navbar Admin -->
-    <nav class="bg-brand-dark text-white shadow-md w-full">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-            <div class="flex items-center gap-3">
-                <div class="text-2xl font-bold tracking-widest uppercase cursor-pointer" onclick="window.location.href='index.html'">
+    <!-- Navbar Admin (Estilo basado en tu imagen) -->
+    <nav class="bg-black text-white shadow-md w-full z-50 flex-shrink-0">
+        <div class="max-w-full mx-auto px-6 h-16 flex justify-between items-center">
+            <div class="flex items-center gap-4">
+                <div class="text-2xl font-bold tracking-widest uppercase brand-font cursor-pointer hover:text-gray-300 transition" onclick="window.location.href='index.html'">
                     UVENT
                 </div>
-                <span class="bg-brand-green text-xs font-bold px-2 py-1 rounded text-brand-dark uppercase">Admin Panel</span>
+                <span class="bg-brand-green text-black text-xs font-bold px-3 py-1 rounded-sm uppercase tracking-wide">
+                    Admin Panel
+                </span>
             </div>
-            <div class="flex items-center gap-4">
+            <div class="flex items-center gap-6">
                 <span class="text-sm font-medium text-gray-300 hidden md:block">Super Administrador</span>
-                <button id="btn-logout-admin" class="text-sm bg-red-600 hover:bg-red-700 px-3 py-1 rounded transition">
+                <button id="btn-logout-admin" class="bg-red-600 hover:bg-red-700 text-white text-sm font-medium px-4 py-2 rounded transition shadow-sm">
                     Salir
                 </button>
             </div>
         </div>
     </nav>
 
-    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full space-y-10">
-
-        <!-- SECCIÓN 1: GESTIÓN DE EVENTOS -->
-        <section class="bg-white rounded-lg shadow overflow-hidden">
-            <div class="px-6 py-4 border-b border-gray-200 bg-gray-50 flex justify-between items-center">
-                <h2 class="text-xl font-bold text-gray-800">📢 Solicitudes y Eventos</h2>
-                <span class="text-sm text-gray-500">Gestiona el estado y aforo</span>
+    <div class="flex flex-grow overflow-hidden">
+        
+        <!-- Sidebar (Opcional para look más pro) -->
+        <aside class="w-64 bg-white border-r border-gray-200 hidden md:flex flex-col pt-6 pb-4">
+            <div class="px-6 mb-8">
+                <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Menú Principal</h3>
             </div>
-            
-            <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50">
-                        <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Evento</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Organizador</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha</th>
-                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
-                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y divide-gray-200" id="admin-events-table">
-                        <!-- Evento 1 -->
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">Taller de Robótica</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">juan@uvent.cl</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">25 Dic</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-center">
-                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800 status-badge">
-                                    Pendiente
-                                </span>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
-                                <button class="text-brand-green hover:text-green-900 btn-approve" title="Aprobar">✓</button>
-                                <button class="text-red-600 hover:text-red-900 btn-reject" title="Rechazar/Cancelar">✕</button>
-                                <button class="text-blue-600 hover:text-blue-900 btn-details" data-event="Taller de Robótica" data-guests="12" data-max="30">Ver Detalles</button>
-                            </td>
-                        </tr>
-                        <!-- Evento 2 -->
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">Conferencia TicSur</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">admin@uvent.cl</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">19 Nov</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-center">
-                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 status-badge">
-                                    Aprobado
-                                </span>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
-                                <button class="text-gray-400 cursor-not-allowed" disabled>✓</button>
-                                <button class="text-red-600 hover:text-red-900 btn-reject" title="Cancelar Evento">✕</button>
-                                <button class="text-blue-600 hover:text-blue-900 btn-details" data-event="Conferencia TicSur" data-guests="85" data-max="100">Ver Detalles</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
+            <nav class="flex-1 px-4 space-y-1">
+                <a href="#" class="flex items-center px-4 py-3 text-sm font-medium bg-brand-lightgreen text-brand-green rounded-lg">
+                    <i class="fas fa-calendar-alt w-6"></i> Dashboard
+                </a>
+                <a href="#" class="flex items-center px-4 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-lg transition">
+                    <i class="fas fa-users w-6"></i> Usuarios
+                </a>
+                <a href="#" class="flex items-center px-4 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-lg transition">
+                    <i class="fas fa-chart-pie w-6"></i> Reportes
+                </a>
+            </nav>
+        </aside>
 
-        <!-- SECCIÓN 2: GESTIÓN DE USUARIOS -->
-        <section class="bg-white rounded-lg shadow overflow-hidden">
-            <div class="px-6 py-4 border-b border-gray-200 bg-gray-50 flex justify-between items-center">
-                <h2 class="text-xl font-bold text-gray-800">👥 Gestión de Usuarios</h2>
-                <span class="text-sm text-gray-500">Administra cuentas y accesos</span>
-            </div>
-            
-            <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50">
-                        <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Correo</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rol</th>
-                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y divide-gray-200" id="admin-users-table">
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="flex items-center">
-                                    <div class="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 font-bold text-xs mr-3">JP</div>
-                                    <div class="text-sm font-medium text-gray-900">Juan Pérez</div>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">juan@uvent.cl</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Organizador</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-3">
-                                <button class="text-indigo-600 hover:text-indigo-900 btn-edit-user" data-user="Juan Pérez">Editar Pass</button>
-                                <button class="text-red-600 hover:text-red-900 btn-delete-user">Eliminar</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="flex items-center">
-                                    <div class="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 font-bold text-xs mr-3">MA</div>
-                                    <div class="text-sm font-medium text-gray-900">Maria A.</div>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">maria@gmail.com</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Asistente</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-3">
-                                <button class="text-indigo-600 hover:text-indigo-900 btn-edit-user" data-user="Maria A.">Editar Pass</button>
-                                <button class="text-red-600 hover:text-red-900 btn-delete-user">Eliminar</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
+        <!-- Main Content Scrollable -->
+        <main class="flex-1 overflow-y-auto p-8 bg-gray-50">
+            <div class="max-w-6xl mx-auto space-y-8 fade-in">
 
-    </main>
-
-    <!-- MODAL DETALLE EVENTO (Invitados + Stats) -->
-    <div id="adminEventModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50 backdrop-blur-sm">
-        <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl p-6 max-h-[90vh] overflow-y-auto">
-            <div class="flex justify-between items-center mb-4 border-b border-gray-200 pb-4">
-                <h3 class="text-2xl font-bold text-brand-dark" id="adminModalTitle">Detalle del Evento</h3>
-                <button id="closeAdminModal" class="text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
-            </div>
-
-            <!-- Métricas -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                <div class="bg-blue-50 p-4 rounded text-center">
-                    <p class="text-xs text-gray-500 uppercase">Inscritos</p>
-                    <p class="text-2xl font-bold text-blue-600" id="adminModalCount">0</p>
+                <!-- Stats Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-white p-6 rounded-xl border border-gray-100 shadow-sm flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">Solicitudes Pendientes</p>
+                            <p class="text-2xl font-bold text-gray-900 mt-1">4</p>
+                        </div>
+                        <div class="bg-yellow-100 p-3 rounded-full text-yellow-600">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl border border-gray-100 shadow-sm flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">Eventos Activos</p>
+                            <p class="text-2xl font-bold text-gray-900 mt-1">12</p>
+                        </div>
+                        <div class="bg-green-100 p-3 rounded-full text-green-600">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl border border-gray-100 shadow-sm flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-500">Usuarios Totales</p>
+                            <p class="text-2xl font-bold text-gray-900 mt-1">1,240</p>
+                        </div>
+                        <div class="bg-blue-100 p-3 rounded-full text-blue-600">
+                            <i class="fas fa-users"></i>
+                        </div>
+                    </div>
                 </div>
-                <div class="bg-green-50 p-4 rounded text-center">
-                    <p class="text-xs text-gray-500 uppercase">Ocupación</p>
-                    <p class="text-2xl font-bold text-brand-green" id="adminModalPercent">0%</p>
+
+                <!-- SECCIÓN 1: GESTIÓN DE EVENTOS -->
+                <section class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                    <div class="px-6 py-5 border-b border-gray-200 flex justify-between items-center bg-gray-50/50">
+                        <div>
+                            <h2 class="text-lg font-bold text-gray-900">Solicitudes Recientes</h2>
+                            <p class="text-sm text-gray-500 mt-1">Administra las aprobaciones de eventos.</p>
+                        </div>
+                        <button class="text-sm text-brand-purple font-medium hover:text-purple-800">Ver todo</button>
+                    </div>
+                    
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Evento</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Organizador</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha</th>
+                                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
+                                    <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200" id="admin-events-table">
+                                <!-- Evento 1 -->
+                                <tr class="hover:bg-gray-50 transition">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <div class="flex-shrink-0 h-10 w-10 rounded bg-brand-purple text-white flex items-center justify-center font-bold">TR</div>
+                                            <div class="ml-4">
+                                                <div class="text-sm font-medium text-gray-900">Taller de Robótica</div>
+                                                <div class="text-sm text-gray-500">Lab A</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">juan@uvent.cl</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">25 Dic, 2024</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-center">
+                                        <span class="badge bg-yellow-100 text-yellow-800 status-badge">Pendiente</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
+                                        <button class="p-2 rounded-full text-green-600 hover:bg-green-50 btn-approve" title="Aprobar"><i class="fas fa-check"></i></button>
+                                        <button class="p-2 rounded-full text-red-600 hover:bg-red-50 btn-reject" title="Rechazar"><i class="fas fa-times"></i></button>
+                                        <button class="p-2 rounded-full text-blue-600 hover:bg-blue-50 btn-details" data-event="Taller de Robótica" data-guests="12" data-max="30" title="Ver Detalles"><i class="fas fa-eye"></i></button>
+                                    </td>
+                                </tr>
+                                <!-- Evento 2 -->
+                                <tr class="hover:bg-gray-50 transition">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <div class="flex-shrink-0 h-10 w-10 rounded bg-brand-green text-white flex items-center justify-center font-bold">TS</div>
+                                            <div class="ml-4">
+                                                <div class="text-sm font-medium text-gray-900">Conferencia TicSur</div>
+                                                <div class="text-sm text-gray-500">Auditorio Central</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">admin@uvent.cl</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">19 Nov, 2024</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-center">
+                                        <span class="badge bg-green-100 text-green-800 status-badge">Aprobado</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
+                                        <button class="p-2 rounded-full text-gray-300 cursor-not-allowed"><i class="fas fa-check"></i></button>
+                                        <button class="p-2 rounded-full text-red-600 hover:bg-red-50 btn-reject" title="Cancelar"><i class="fas fa-ban"></i></button>
+                                        <button class="p-2 rounded-full text-blue-600 hover:bg-blue-50 btn-details" data-event="Conferencia TicSur" data-guests="85" data-max="100"><i class="fas fa-eye"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- SECCIÓN 2: GESTIÓN DE USUARIOS -->
+                <section class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                    <div class="px-6 py-5 border-b border-gray-200 bg-gray-50/50">
+                        <h2 class="text-lg font-bold text-gray-900">Base de Usuarios</h2>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Usuario</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rol</th>
+                                    <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200" id="admin-users-table">
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <div class="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 font-bold text-xs mr-3">JP</div>
+                                            <div>
+                                                <div class="text-sm font-medium text-gray-900">Juan Pérez</div>
+                                                <div class="text-sm text-gray-500">juan@uvent.cl</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">Organizador</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-3">
+                                        <button class="text-indigo-600 hover:text-indigo-900 btn-edit-user" data-user="Juan Pérez">Editar</button>
+                                        <button class="text-red-600 hover:text-red-900 btn-delete-user">Eliminar</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- MODAL DETALLE EVENTO -->
+    <div id="adminEventModal" class="fixed inset-0 bg-black bg-opacity-60 hidden flex items-center justify-center z-[100] backdrop-blur-sm transition-opacity">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl p-0 overflow-hidden transform transition-all scale-100 m-4">
+            <div class="bg-gray-50 px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+                <h3 class="text-xl font-bold text-gray-800" id="adminModalTitle">Detalle del Evento</h3>
+                <button id="closeAdminModal" class="text-gray-400 hover:text-gray-600 transition">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+
+            <div class="p-8">
+                <!-- Métricas con estilo Cards -->
+                <div class="grid grid-cols-3 gap-4 mb-8">
+                    <div class="bg-blue-50 p-4 rounded-xl text-center border border-blue-100">
+                        <p class="text-xs font-bold text-blue-600 uppercase tracking-wide">Inscritos</p>
+                        <p class="text-3xl font-bold text-blue-800 mt-2" id="adminModalCount">0</p>
+                    </div>
+                    <div class="bg-green-50 p-4 rounded-xl text-center border border-green-100">
+                        <p class="text-xs font-bold text-green-600 uppercase tracking-wide">Ocupación</p>
+                        <p class="text-3xl font-bold text-green-800 mt-2" id="adminModalPercent">0%</p>
+                    </div>
+                    <div class="bg-purple-50 p-4 rounded-xl text-center border border-purple-100">
+                        <p class="text-xs font-bold text-purple-600 uppercase tracking-wide">Ingresos</p>
+                        <p class="text-3xl font-bold text-purple-800 mt-2">$0</p>
+                    </div>
                 </div>
-                <div class="bg-purple-50 p-4 rounded text-center">
-                    <p class="text-xs text-gray-500 uppercase">Ingresos (Est.)</p>
-                    <p class="text-2xl font-bold text-brand-purple">$0</p> <!-- Gratis -->
+
+                <!-- Barra Progreso -->
+                <div class="mb-8">
+                    <div class="flex justify-between text-sm font-medium text-gray-600 mb-2">
+                        <span>Progreso de Aforo</span>
+                        <span id="adminModalProgressText">0/100</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+                        <div id="adminModalBar" class="bg-brand-green h-3 rounded-full transition-all duration-1000 ease-out" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <!-- Tabla de Invitados -->
+                <div>
+                    <h4 class="font-bold text-gray-900 mb-4 flex items-center gap-2"><i class="fas fa-list"></i> Lista de Invitados</h4>
+                    <div class="border border-gray-200 rounded-lg overflow-hidden">
+                        <div class="overflow-y-auto max-h-48 bg-gray-50 custom-scrollbar">
+                            <table class="min-w-full divide-y divide-gray-200 text-sm">
+                                <thead class="bg-gray-100 sticky top-0">
+                                    <tr>
+                                        <th class="px-4 py-3 text-left font-semibold text-gray-600">Nombre</th>
+                                        <th class="px-4 py-3 text-left font-semibold text-gray-600">Email</th>
+                                        <th class="px-4 py-3 text-right font-semibold text-gray-600">Ticket</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200" id="guestListBody">
+                                    <!-- JS Content -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Barra Progreso -->
-            <div class="mb-6">
-                <div class="flex justify-between text-sm mb-1">
-                    <span>Progreso de Aforo</span>
-                    <span class="font-bold" id="adminModalProgressText">0/100</span>
-                </div>
-                <div class="w-full bg-gray-200 rounded-full h-2.5">
-                    <div id="adminModalBar" class="bg-brand-green h-2.5 rounded-full" style="width: 0%"></div>
-                </div>
-            </div>
-
-            <!-- Tabla de Invitados (Scrollable) -->
-            <h4 class="font-bold text-lg mb-3">📜 Lista de Invitados</h4>
-            <div class="border border-gray-200 rounded overflow-hidden">
-                <div class="overflow-y-auto h-48 bg-gray-50">
-                    <table class="min-w-full divide-y divide-gray-200 text-sm">
-                        <thead class="bg-gray-100 sticky top-0">
-                            <tr>
-                                <th class="px-4 py-2 text-left font-medium text-gray-500">Nombre</th>
-                                <th class="px-4 py-2 text-left font-medium text-gray-500">Email</th>
-                                <th class="px-4 py-2 text-right font-medium text-gray-500">Ticket</th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-white divide-y divide-gray-200" id="guestListBody">
-                            <!-- Se llena con JS -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <div class="mt-6 flex justify-end">
-                <button id="closeAdminModalBtn" class="bg-gray-800 text-white px-4 py-2 rounded hover:bg-gray-700 transition">Cerrar Panel</button>
+            <div class="bg-gray-50 px-6 py-4 border-t border-gray-200 flex justify-end">
+                <button id="closeAdminModalBtn" class="bg-gray-800 text-white px-6 py-2 rounded-lg hover:bg-gray-900 transition font-medium shadow-sm">Cerrar Panel</button>
             </div>
         </div>
     </div>
-
-    <!-- MODAL EDITAR USUARIO (Contraseña) -->
-    <div id="userEditModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50 backdrop-blur-sm">
-        <div class="bg-white rounded-lg shadow-xl w-full max-w-sm p-6">
-            <h3 class="text-lg font-bold mb-4">Modificar Usuario</h3>
-            <p class="text-sm text-gray-600 mb-4">Cambiando contraseña para: <strong id="editUserName">Usuario</strong></p>
-            
-            <form onsubmit="event.preventDefault(); document.getElementById('userEditModal').classList.add('hidden'); alert('Contraseña actualizada correctamente.');">
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700">Nueva Contraseña</label>
-                    <input type="password" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-brand-green focus:border-brand-green" placeholder="******">
-                </div>
-                <div class="flex justify-end gap-2">
-                    <button type="button" onclick="document.getElementById('userEditModal').classList.add('hidden')" class="text-gray-500 hover:text-gray-700 px-3 py-2">Cancelar</button>
-                    <button type="submit" class="bg-brand-green text-white px-4 py-2 rounded hover:bg-green-700">Guardar</button>
+    
+    <!-- Modal Editar Usuario (Simplificado pero con estilo) -->
+    <div id="userEditModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-[110] backdrop-blur-sm">
+        <div class="bg-white rounded-xl shadow-xl w-full max-w-sm p-6">
+            <h3 class="text-lg font-bold mb-1">Seguridad</h3>
+            <p class="text-sm text-gray-500 mb-6">Cambiar contraseña para <span id="editUserName" class="font-medium text-gray-900"></span></p>
+            <form onsubmit="event.preventDefault(); document.getElementById('userEditModal').classList.add('hidden'); alert('Contraseña actualizada.');">
+                <input type="password" class="w-full border border-gray-300 rounded-lg p-3 mb-4 focus:ring-2 focus:ring-brand-purple outline-none" placeholder="Nueva contraseña">
+                <div class="flex justify-end gap-3">
+                    <button type="button" onclick="document.getElementById('userEditModal').classList.add('hidden')" class="text-gray-500 hover:text-gray-700 font-medium">Cancelar</button>
+                    <button type="submit" class="bg-brand-purple text-white px-4 py-2 rounded-lg hover:bg-opacity-90">Guardar</button>
                 </div>
             </form>
         </div>
