@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Panel - UVENT</title>
+    
+    <!-- Librerías -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="js/tailwind-config.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans min-h-screen flex flex-col">
+
+    <!-- Navbar Usuario Logueado -->
+    <nav class="bg-white shadow-sm w-full">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+            <div class="text-2xl font-bold tracking-widest text-black uppercase cursor-pointer" onclick="window.location.href='index.html'">
+                UVENT
+            </div>
+            <div class="flex items-center gap-4">
+                <span class="text-sm font-medium text-gray-600 hidden md:block">Hola, Organizador</span>
+                <div class="h-8 w-8 rounded-full bg-brand-green text-white flex items-center justify-center font-bold">
+                    O
+                </div>
+                <button id="btn-logout" class="text-sm text-red-500 hover:text-red-700 font-medium ml-2">
+                    Cerrar Sesión
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Contenido Principal -->
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full">
+        
+        <!-- Encabezado y Acción Principal -->
+        <div class="flex flex-col md:flex-row justify-between items-center mb-10 gap-4">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900">Mis Eventos</h1>
+                <p class="text-gray-500">Gestiona tus solicitudes y revisa el aforo.</p>
+            </div>
+            <button onclick="window.location.href='organizar.html'" class="flex items-center gap-2 bg-brand-green text-white px-6 py-3 rounded-sm shadow-md hover:bg-opacity-90 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                </svg>
+                Crear Nuevo Evento
+            </button>
+        </div>
+
+        <!-- Listado de Eventos (Grid) -->
+        <div class="grid gap-6">
+
+            <!-- Evento 1: APROBADO -->
+            <div class="bg-white p-6 rounded-sm shadow-sm border-l-4 border-brand-green flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="flex-grow">
+                    <div class="flex items-center gap-3 mb-1">
+                        <h3 class="text-xl font-bold text-gray-800">Conferencia TicSur 2024</h3>
+                        <span class="px-2 py-1 text-xs font-bold text-green-700 bg-green-100 rounded-full">Aprobado</span>
+                    </div>
+                    <p class="text-sm text-gray-500">📅 19 Noviembre | 📍 Av. Pedro de Valdivia</p>
+                </div>
+                
+                <div class="flex items-center gap-4">
+                    <div class="text-right hidden md:block">
+                        <p class="text-xs text-gray-400">Estado del Aforo</p>
+                        <p class="font-bold text-brand-green">85 / 100</p>
+                    </div>
+                    <button class="btn-view-capacity px-4 py-2 border border-gray-300 text-gray-600 hover:bg-gray-50 rounded-sm transition text-sm"
+                            data-title="Conferencia TicSur 2024"
+                            data-current="85"
+                            data-max="100">
+                        Ver Aforo
+                    </button>
+                </div>
+            </div>
+
+            <!-- Evento 2: PENDIENTE -->
+            <div class="bg-white p-6 rounded-sm shadow-sm border-l-4 border-yellow-400 flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="flex-grow">
+                    <div class="flex items-center gap-3 mb-1">
+                        <h3 class="text-xl font-bold text-gray-800">Taller de Robótica</h3>
+                        <span class="px-2 py-1 text-xs font-bold text-yellow-700 bg-yellow-100 rounded-full">Solicitado / Pendiente</span>
+                    </div>
+                    <p class="text-sm text-gray-500">📅 25 Diciembre | 📍 Lab Computación</p>
+                </div>
+                
+                <div class="flex items-center gap-4">
+                    <div class="text-right hidden md:block">
+                        <p class="text-xs text-gray-400">Estado del Aforo</p>
+                        <p class="font-bold text-yellow-600">0 / 30</p>
+                    </div>
+                    <button class="btn-view-capacity px-4 py-2 border border-gray-300 text-gray-600 hover:bg-gray-50 rounded-sm transition text-sm"
+                            data-title="Taller de Robótica"
+                            data-current="0"
+                            data-max="30">
+                        Ver Aforo
+                    </button>
+                </div>
+            </div>
+
+            <!-- Evento 3: FINALIZADO -->
+            <div class="bg-white p-6 rounded-sm shadow-sm border-l-4 border-gray-400 opacity-75 flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="flex-grow">
+                    <div class="flex items-center gap-3 mb-1">
+                        <h3 class="text-xl font-bold text-gray-600">Charla Ciberseguridad</h3>
+                        <span class="px-2 py-1 text-xs font-bold text-gray-700 bg-gray-200 rounded-full">Finalizado</span>
+                    </div>
+                    <p class="text-sm text-gray-500">📅 10 Octubre | 📍 Auditorio B</p>
+                </div>
+                
+                <div class="flex items-center gap-4">
+                    <button class="px-4 py-2 text-gray-400 cursor-not-allowed text-sm" disabled>
+                        Evento Cerrado
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- MODAL DE AFORO (Oculto por defecto) -->
+    <div id="capacityModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50 backdrop-blur-sm transition-opacity duration-300">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-md p-6 transform transition-all scale-100">
+            
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-bold text-gray-900" id="modalEventTitle">Título del Evento</h3>
+                <button id="closeModal" class="text-gray-400 hover:text-gray-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Gráfico de Barra -->
+            <div class="mb-2 flex justify-between text-sm font-medium">
+                <span class="text-gray-600">Inscritos</span>
+                <span class="text-brand-green" id="modalNumbers">0 / 0</span>
+            </div>
+            
+            <div class="w-full bg-gray-200 rounded-full h-4 mb-6 overflow-hidden">
+                <div id="modalProgressBar" class="bg-brand-green h-4 rounded-full transition-all duration-1000 ease-out" style="width: 0%"></div>
+            </div>
+
+            <div class="bg-blue-50 text-blue-800 text-sm p-4 rounded-sm flex gap-3 items-start">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <p>Este evento está activo. Los usuarios pueden seguir inscribiéndose hasta completar el aforo máximo.</p>
+            </div>
+
+            <div class="mt-6 text-right">
+                <button id="closeModalBtn" class="bg-gray-800 text-white px-4 py-2 rounded-sm hover:bg-gray-700 transition">
+                    Cerrar
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-brand-dark text-white py-6 mt-auto">
+        <div class="container mx-auto text-center text-sm text-gray-400">
+            &copy; 2025 UVENT - Panel de Gestión
+        </div>
+    </footer>
+
+    <script src="js/main.js" defer></script>
+</body>
+</html>
