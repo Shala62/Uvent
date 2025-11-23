@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear Cuenta - UVENT</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="js/tailwind-config.js"></script>
+    <link href="css/styles.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <!-- FIREBASE SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-analytics-compat.js"></script>
+    
+    <!-- Configuración y BD -->
+    <script src="js/firebase-config.js"></script>
+    <script src="js/db.js"></script>
+</head>
+<body class="h-screen w-full flex overflow-hidden bg-white">
+
+    <!-- Lado Izquierdo: Formulario -->
+    <div class="w-full lg:w-1/2 flex items-center justify-center p-8 fade-in overflow-y-auto">
+        <div class="w-full max-w-md space-y-8">
+            <div class="text-center lg:text-left">
+                <a href="index.html" class="text-brand-purple font-bold text-2xl lg:hidden mb-8 block brand-font">UVENT</a>
+                <h2 class="text-4xl font-bold text-gray-900 brand-font">Crear una cuenta</h2>
+                <p class="mt-2 text-sm text-gray-600">Únete a la comunidad y empieza a gestionar tus eventos.</p>
+            </div>
+
+            <form id="registerForm" class="mt-8 space-y-6">
+                <div class="space-y-4">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Nombre</label>
+                            <input type="text" id="regName" required class="mt-1 block w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 focus:ring-2 focus:ring-brand-green focus:border-transparent outline-none transition" placeholder="Juan">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Apellido</label>
+                            <input type="text" id="regLastName" required class="mt-1 block w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 focus:ring-2 focus:ring-brand-green focus:border-transparent outline-none transition" placeholder="Pérez">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Correo Institucional</label>
+                        <input type="email" id="regEmail" required class="mt-1 block w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 focus:ring-2 focus:ring-brand-green focus:border-transparent outline-none transition" placeholder="nombre@universidad.cl">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Contraseña</label>
+                        <input type="password" id="regPass" required class="mt-1 block w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 focus:ring-2 focus:ring-brand-green focus:border-transparent outline-none transition" placeholder="••••••••">
+                        <p class="mt-1 text-xs text-gray-500">Mínimo 6 caracteres</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center">
+                    <input id="terms" type="checkbox" required class="h-4 w-4 text-brand-green focus:ring-brand-green border-gray-300 rounded">
+                    <label for="terms" class="ml-2 block text-sm text-gray-900">
+                        Acepto los <a href="#" id="btnOpenTerms" class="text-brand-green hover:underline font-semibold">Términos y Condiciones</a>
+                    </label>
+                </div>
+
+                <button type="submit" id="btnRegBtn" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-bold text-white bg-brand-green hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-green transition transform hover:-translate-y-0.5">
+                    Registrarse
+                </button>
+            </form>
+
+            <p class="mt-2 text-center text-sm text-gray-600">
+                ¿Ya tienes cuenta?
+                <a href="login.html" class="font-medium text-brand-green hover:text-green-700 transition">
+                    Inicia Sesión aquí
+                </a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Lado Derecho: Imagen -->
+    <div class="hidden lg:flex w-1/2 bg-gray-900 relative items-center justify-center overflow-hidden">
+        <img src="https://images.unsplash.com/photo-1523580494863-6f3031224c94?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" class="absolute inset-0 w-full h-full object-cover opacity-60">
+        <div class="absolute inset-0 bg-gradient-to-t from-brand-dark to-transparent"></div>
+        
+        <div class="relative z-20 text-white p-12 max-w-lg">
+            <h2 class="text-4xl font-bold mb-6">Construye experiencias inolvidables.</h2>
+            <p class="text-lg text-gray-300">Únete a miles de estudiantes y organizadores que están transformando la vida universitaria con UVENT.</p>
+        </div>
+    </div>
+
+    <!-- MODAL DE TÉRMINOS Y CONDICIONES -->
+    <div id="termsModal" class="fixed inset-0 bg-black bg-opacity-60 hidden flex items-center justify-center z-50 backdrop-blur-sm transition-opacity">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl p-0 overflow-hidden transform scale-100 m-4 flex flex-col max-h-[80vh]">
+            
+            <div class="px-8 py-6 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
+                <h3 class="text-2xl font-bold text-gray-900">Términos y Condiciones</h3>
+                <button id="closeTermsModal" class="text-gray-400 hover:text-gray-600 transition"><i class="fas fa-times text-xl"></i></button>
+            </div>
+
+            <div class="p-8 overflow-y-auto custom-scrollbar text-gray-600 text-sm space-y-4 leading-relaxed">
+                <p><strong>1. Aceptación de los Términos:</strong> Al registrarse y utilizar la plataforma UVENT, usted acepta cumplir con los presentes términos y condiciones de uso.</p>
+                <p><strong>2. Uso de la Plataforma:</strong> UVENT es una herramienta para la gestión y difusión de eventos universitarios. El usuario se compromete a utilizarla de manera responsable y ética.</p>
+                <p><strong>3. Privacidad de Datos:</strong> Nos comprometemos a proteger su información personal de acuerdo con las leyes de protección de datos vigentes. Su correo electrónico solo será utilizado para comunicaciones relacionadas con los eventos.</p>
+                <p><strong>4. Responsabilidad de Contenidos:</strong> Los organizadores son responsables de la veracidad de la información publicada en sus eventos. UVENT no se hace responsable por cancelaciones o cambios de última hora.</p>
+                <p><strong>5. Conducta del Usuario:</strong> Queda prohibido el uso de la plataforma para difundir contenido ofensivo, discriminatorio o ilegal. UVENT se reserva el derecho de suspender cuentas que violen esta norma.</p>
+                <p><strong>6. Modificaciones:</strong> Nos reservamos el derecho de modificar estos términos en cualquier momento. Se notificará a los usuarios sobre cambios significativos.</p>
+            </div>
+
+            <div class="px-8 py-4 border-t border-gray-100 bg-gray-50 flex justify-end">
+                <button id="btnAcceptTerms" class="px-6 py-2 bg-brand-green text-white font-bold rounded-lg shadow-md hover:bg-opacity-90 transition">
+                    Entendido
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/main.js" defer></script>
+</body>
+</html>

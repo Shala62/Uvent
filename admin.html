@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - UVENT</title>
+    
+    <!-- ESTILOS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="js/tailwind-config.js"></script>
+    <link href="css/styles.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <!-- FIREBASE -->
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-analytics-compat.js"></script>
+    
+    <!-- LÓGICA -->
+    <script src="js/firebase-config.js"></script>
+    <script src="js/db.js"></script>
+</head>
+<body class="bg-gray-50 text-gray-800 h-screen flex flex-col overflow-hidden">
+
+    <!-- NAVBAR SUPERIOR -->
+    <nav class="bg-black text-white shadow-md w-full z-50 flex-shrink-0">
+        <div class="max-w-full mx-auto px-6 h-16 flex justify-between items-center">
+            <div class="flex items-center gap-4">
+                <div class="text-2xl font-bold tracking-widest uppercase brand-font cursor-pointer hover:text-gray-300 transition" onclick="window.location.href='index.html'">
+                    UVENT
+                </div>
+                <span class="bg-brand-green text-black text-xs font-bold px-3 py-1 rounded-sm uppercase tracking-wide">
+                    Admin Panel
+                </span>
+            </div>
+            <div class="flex items-center gap-6">
+                <span class="text-sm font-medium text-gray-300 hidden md:block">Super Administrador</span>
+                <button id="btn-logout-admin" class="bg-red-600 hover:bg-red-700 text-white text-sm font-medium px-4 py-2 rounded transition shadow-sm">
+                    Salir
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="flex flex-grow overflow-hidden">
+        
+        <!-- SIDEBAR (MENÚ LATERAL) -->
+        <aside class="w-64 bg-white border-r border-gray-200 hidden md:flex flex-col pt-6 pb-4">
+            <div class="px-6 mb-8">
+                <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Menú Principal</h3>
+            </div>
+            <nav class="flex-1 px-4 space-y-1">
+                <button id="menu-dashboard" class="w-full flex items-center px-4 py-3 text-sm font-medium bg-brand-lightgreen text-brand-green rounded-lg transition-colors text-left">
+                    <i class="fas fa-calendar-alt w-6"></i> Dashboard
+                </button>
+                <button id="menu-users" class="w-full flex items-center px-4 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-lg transition-colors text-left">
+                    <i class="fas fa-users w-6"></i> Usuarios
+                </button>
+                <button id="menu-reports" class="w-full flex items-center px-4 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-lg transition-colors text-left">
+                    <i class="fas fa-chart-pie w-6"></i> Reportes
+                </button>
+            </nav>
+        </aside>
+
+        <!-- CONTENIDO PRINCIPAL -->
+        <main class="flex-1 overflow-y-auto p-8 bg-gray-50 relative">
+            <div class="max-w-6xl mx-auto fade-in">
+
+                <!-- VISTA 1: DASHBOARD (Visible por defecto) -->
+                <div id="view-dashboard" class="space-y-8">
+                    <!-- Stats Cards -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="bg-white p-6 rounded-xl border border-gray-100 shadow-sm flex items-center justify-between">
+                            <div><p class="text-sm font-medium text-gray-500">Solicitudes Pendientes</p><p class="text-2xl font-bold text-gray-900 mt-1" id="stat-pending">0</p></div>
+                            <div class="bg-yellow-100 p-3 rounded-full text-yellow-600"><i class="fas fa-clock"></i></div>
+                        </div>
+                        <div class="bg-white p-6 rounded-xl border border-gray-100 shadow-sm flex items-center justify-between">
+                            <div><p class="text-sm font-medium text-gray-500">Eventos Activos</p><p class="text-2xl font-bold text-gray-900 mt-1" id="stat-active">0</p></div>
+                            <div class="bg-green-100 p-3 rounded-full text-green-600"><i class="fas fa-check-circle"></i></div>
+                        </div>
+                        <div class="bg-white p-6 rounded-xl border border-gray-100 shadow-sm flex items-center justify-between">
+                            <div><p class="text-sm font-medium text-gray-500">Usuarios Totales</p><p class="text-2xl font-bold text-gray-900 mt-1" id="stat-users">0</p></div>
+                            <div class="bg-blue-100 p-3 rounded-full text-blue-600"><i class="fas fa-users"></i></div>
+                        </div>
+                    </div>
+
+                    <!-- Tabla Eventos -->
+                    <section class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                        <div class="px-6 py-5 border-b border-gray-200 bg-gray-50/50 flex justify-between items-center">
+                            <h2 class="text-lg font-bold text-gray-900">Solicitudes Recientes</h2>
+                            <button class="text-sm text-brand-purple font-medium hover:text-purple-800" onclick="location.reload()">Actualizar</button>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Evento</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Organizador</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha</th>
+                                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
+                                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200" id="admin-events-table">
+                                    <tr><td colspan="5" class="text-center py-8 text-gray-400"><i class="fas fa-spinner fa-spin mr-2"></i> Cargando...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- VISTA 2: USUARIOS (Oculta) -->
+                <div id="view-users" class="space-y-8 hidden">
+                    <div class="flex justify-between items-end">
+                        <div><h2 class="text-2xl font-bold text-gray-900">Gestión de Usuarios</h2><p class="text-gray-500">Administra los roles y accesos.</p></div>
+                    </div>
+                    <section class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Usuario</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rol</th>
+                                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200" id="admin-users-table"></tbody>
+                            </table>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- VISTA 3: REPORTES (Oculta) -->
+                <div id="view-reports" class="space-y-8 hidden">
+                    <div class="flex justify-between items-end">
+                        <div><h2 class="text-2xl font-bold text-gray-900">Reportes y Estadísticas</h2><p class="text-gray-500">Análisis de rendimiento.</p></div>
+                        <button class="bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 transition text-sm shadow-sm" onclick="window.print()">
+                            <i class="fas fa-download mr-2"></i> PDF
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-gradient-to-br from-purple-600 to-indigo-700 rounded-2xl p-6 text-white shadow-lg relative overflow-hidden">
+                            <div class="absolute right-0 top-0 opacity-10 transform translate-x-4 -translate-y-4"><i class="fas fa-trophy text-9xl"></i></div>
+                            <p class="text-purple-100 font-medium mb-1">Evento Más Popular</p>
+                            <h3 class="text-2xl font-bold mb-4 truncate pr-4" id="report-top-event-name">Cargando...</h3>
+                            <div class="flex items-center gap-2 bg-white/20 w-fit px-3 py-1 rounded-lg"><i class="fas fa-user-check"></i><span class="font-bold" id="report-top-event-count">0</span> inscritos</div>
+                        </div>
+                        <div class="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm flex flex-col justify-center">
+                            <div class="flex justify-between items-center mb-2"><p class="text-gray-500 font-medium">Ocupación Promedio Global</p><span class="bg-green-100 text-green-700 text-xs font-bold px-2 py-1 rounded">Saludable</span></div>
+                            <h3 class="text-4xl font-bold text-gray-900 mb-4" id="report-avg-occupancy">0%</h3>
+                            <div class="w-full bg-gray-100 rounded-full h-2"><div id="report-occupancy-bar" class="bg-green-500 h-2 rounded-full transition-all duration-1000" style="width: 0%"></div></div>
+                        </div>
+                    </div>
+
+                    <section class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                        <div class="px-6 py-5 border-b border-gray-200 bg-gray-50/50"><h3 class="text-lg font-bold text-gray-900">Ranking de Popularidad</h3></div>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">#</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Evento</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Progreso</th>
+                                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200" id="report-ranking-table"></tbody>
+                            </table>
+                        </div>
+                    </section>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- MODAL DETALLE EVENTO (CON CARGA DE IMAGEN) -->
+    <div id="adminEventModal" class="fixed inset-0 bg-black bg-opacity-60 hidden flex items-center justify-center z-[100] backdrop-blur-sm transition-opacity">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl p-0 overflow-hidden transform transition-all scale-100 m-4 flex flex-col max-h-[90vh]">
+            
+            <div class="bg-gray-50 px-6 py-4 border-b border-gray-200 flex justify-between items-center flex-shrink-0">
+                <h3 class="text-xl font-bold text-gray-800" id="adminModalTitle">Detalle</h3>
+                <button id="closeAdminModal" class="text-gray-400 hover:text-gray-600 transition text-2xl">&times;</button>
+            </div>
+
+            <div class="p-8 overflow-y-auto custom-scrollbar">
+                
+                <!-- GESTIÓN DE IMAGEN -->
+                <div class="mb-8 border-b border-gray-100 pb-8">
+                    <h4 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-4">Imagen de Portada</h4>
+                    <div class="flex gap-6 items-start">
+                        <div class="w-1/3">
+                            <img id="adminEventImagePreview" src="https://via.placeholder.com/300x200?text=Sin+Imagen" class="w-full h-32 object-cover rounded-lg shadow-sm border border-gray-200">
+                        </div>
+                        <div class="w-2/3 space-y-3">
+                            <div><label class="block text-xs text-gray-500 mb-1">URL de Imagen</label><input type="text" id="adminEventImageUrl" class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:ring-2 focus:ring-brand-green outline-none" placeholder="https://..."></div>
+                            <div class="text-center text-gray-400 text-xs">- O -</div>
+                            <div><label class="block text-xs text-gray-500 mb-1">Subir Archivo</label><input type="file" id="adminEventImageFile" accept="image/*" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100"></div>
+                            <button id="btnSaveImage" class="mt-2 bg-brand-green text-white px-4 py-2 rounded text-sm font-bold hover:bg-green-600 transition shadow-sm w-full"><i class="fas fa-save mr-2"></i> Guardar Imagen</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Métricas -->
+                <div class="grid grid-cols-3 gap-4 mb-8">
+                    <div class="bg-blue-50 p-4 rounded-xl text-center border border-blue-100"><p class="text-xs font-bold text-blue-600 uppercase">Inscritos</p><p class="text-3xl font-bold text-blue-800 mt-2" id="adminModalCount">0</p></div>
+                    <div class="bg-green-50 p-4 rounded-xl text-center border border-green-100"><p class="text-xs font-bold text-green-600 uppercase">Ocupación</p><p class="text-3xl font-bold text-green-800 mt-2" id="adminModalPercent">0%</p></div>
+                    <div class="bg-purple-50 p-4 rounded-xl text-center border border-purple-100"><p class="text-xs font-bold text-purple-600 uppercase">Capacidad</p><p class="text-3xl font-bold text-purple-800 mt-2" id="adminModalCapacity">0</p></div>
+                </div>
+
+                <!-- Barra Progreso -->
+                <div class="mb-8">
+                    <div class="flex justify-between text-sm font-medium text-gray-600 mb-2"><span>Progreso</span><span id="adminModalProgressText">0/100</span></div>
+                    <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden"><div id="adminModalBar" class="bg-brand-green h-3 rounded-full transition-all duration-1000 ease-out" style="width: 0%"></div></div>
+                </div>
+
+                <!-- Tabla Invitados -->
+                <div>
+                    <h4 class="font-bold text-gray-900 mb-4">Lista de Invitados</h4>
+                    <div class="border border-gray-200 rounded-lg overflow-hidden">
+                        <div class="overflow-y-auto max-h-48 bg-gray-50 custom-scrollbar">
+                            <table class="min-w-full divide-y divide-gray-200 text-sm">
+                                <thead class="bg-gray-100 sticky top-0"><tr><th class="px-4 py-3 text-left font-semibold text-gray-600">Nombre</th><th class="px-4 py-3 text-left font-semibold text-gray-600">Email</th><th class="px-4 py-3 text-right font-semibold text-gray-600">Ticket</th></tr></thead>
+                                <tbody class="bg-white divide-y divide-gray-200" id="guestListBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-gray-50 px-6 py-4 border-t border-gray-200 flex justify-end flex-shrink-0">
+                <button id="closeAdminModalBtn" class="bg-gray-800 text-white px-6 py-2 rounded-lg hover:bg-gray-900 transition">Cerrar Panel</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- MODAL EDITAR USUARIO -->
+    <div id="userEditModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-[110] backdrop-blur-sm">
+        <div class="bg-white rounded-xl shadow-xl w-full max-w-sm p-6">
+            <h3 class="text-lg font-bold mb-1">Editar Usuario</h3>
+            <p class="text-sm text-gray-500 mb-6">Usuario: <span id="editUserName" class="font-medium text-gray-900"></span></p>
+            <form onsubmit="event.preventDefault(); document.getElementById('userEditModal').classList.add('hidden'); alert('Contraseña actualizada.');">
+                <input type="password" class="w-full border border-gray-300 rounded-lg p-3 mb-4 focus:ring-2 focus:ring-brand-purple" placeholder="Nueva contraseña">
+                <div class="flex justify-end gap-3">
+                    <button type="button" class="text-gray-500 hover:text-gray-700" onclick="document.getElementById('userEditModal').classList.add('hidden')">Cancelar</button>
+                    <button type="submit" class="bg-brand-purple text-white px-4 py-2 rounded-lg hover:bg-opacity-90">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- SCRIPT PRINCIPAL -->
+    <script src="js/main.js" defer></script>
+</body>
+</html>

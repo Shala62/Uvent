@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Datos V2 - UVENT</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- FIREBASE (Versión Compat) -->
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+</head>
+<body class="bg-gray-900 text-white h-screen flex flex-col items-center justify-center p-4">
+
+    <div class="max-w-2xl w-full bg-gray-800 p-8 rounded-xl shadow-2xl text-center">
+        <h1 class="text-3xl font-bold mb-4 text-green-500">Instalador Robusto</h1>
+        <p class="text-gray-400 mb-8">Esta versión forzará la creación de datos incluso si la autenticación falla.</p>
+
+        <div id="status" class="mb-6 text-sm text-left bg-black p-4 rounded border border-gray-700 h-64 overflow-y-auto font-mono">
+            <span class="text-gray-500">> Listo. Pulsa el botón.</span>
+        </div>
+
+        <button onclick="runSeeder()" id="btn-seed" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded transition shadow-lg transform hover:scale-[1.02]">
+            Forzar Instalación de Datos
+        </button>
+        
+        <a href="index.html" class="block mt-6 text-sm text-gray-400 hover:text-white underline">Ir al Inicio (index.html)</a>
+    </div>
+
+    <script>
+        // 1. TU CONFIGURACIÓN
+        const firebaseConfig = {
+            apiKey: "AIzaSyBl4ei2_fL9NPyBKIxkJDVGHcTPo9YjOiE",
+            authDomain: "uvent-db.firebaseapp.com",
+            projectId: "uvent-db",
+            storageBucket: "uvent-db.firebasestorage.app",
+            messagingSenderId: "418098128816",
+            appId: "1:418098128816:web:46fca8496fb02d07385875",
+            measurementId: "G-PV1LYTHWKR"
+        };
+
+        // 2. INICIALIZACIÓN
+        const app = firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // Utilidad de log visual
+        const log = (msg, type='info') => {
+            const el = document.getElementById('status');
+            let color = 'text-gray-300';
+            if (type === 'error') color = 'text-red-400';
+            if (type === 'success') color = 'text-green-400';
+            if (type === 'warning') color = 'text-yellow-400';
+            
+            el.innerHTML += `<div class="${color} mb-1 border-b border-gray-800 pb-1">> ${msg}</div>`;
+            el.scrollTop = el.scrollHeight;
+        };
+
+        // Función auxiliar para generar IDs falsos si Auth falla
+        const generateFakeId = () => 'user_' + Math.random().toString(36).substr(2, 9);
+
+        // Función para crear usuarios con timeout
+        async function createUser(email, password, name, role) {
+            let uid = null;
+            
+            try {
+                // Truco: Desactivar persistencia para evitar bloqueos en iframes
+                await auth.setPersistence(firebase.auth.Auth.Persistence.NONE);
+
+                // Promesa con timeout de 3 segundos
+                const authPromise = auth.createUserWithEmailAndPassword(email, password);
+                const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout")), 3000));
+
+                const userCredential = await Promise.race([authPromise, timeoutPromise]);
+                uid = userCredential.user.uid;
+                log(`[OK] Auth creado: ${email}`, 'success');
+
+            } catch (error) {
+                if (error.code === 'auth/email-already-in-use') {
+                    log(`[INFO] El usuario ${email} ya existe en Auth.`, 'warning');
+                    // Intentamos un login rápido para obtener el ID, si falla usamos uno falso
+                    try {
+                        const login = await auth.signInWithEmailAndPassword(email, password);
+                        uid = login.user.uid;
+                    } catch(e) { uid = generateFakeId(); }
+                } else {
+                    log(`[WARN] Falló Auth (${error.message}). Usando ID simulado para Firestore.`, 'warning');
+                    uid = generateFakeId(); // Fallback crítico: Usar ID falso para que la BD no se quede vacía
+                }
+            }
+
+            // Crear documento en Firestore (Esto es lo importante para que la web funcione)
+            try {
+                await db.collection("users").doc(uid).set({
+                    name: name,
+                    email: email,
+                    role: role,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                log(`[OK] Datos guardados en Firestore para: ${name}`, 'success');
+                return uid;
+            } catch (dbError) {
+                log(`[ERROR CRÍTICO] No se pudo escribir en BD: ${dbError.message}`, 'error');
+                return uid;
+            }
+        }
+
+        // Función para crear eventos
+        async function createEvent(data) {
+            try {
+                await db.collection("events").add({
+                    ...data,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                log(`[OK] Evento creado: ${data.name}`, 'success');
+            } catch (error) {
+                log(`[ERROR] Falló crear evento: ${error.message}`, 'error');
+            }
+        }
+
+        // PROCESO PRINCIPAL
+        async function runSeeder() {
+            const btn = document.getElementById('btn-seed');
+            btn.disabled = true;
+            btn.innerText = "Trabajando...";
+            btn.className = "w-full bg-yellow-600 text-white font-bold py-3 rounded cursor-wait";
+
+            log("INICIANDO MODO FUERZA BRUTA...", 'warning');
+
+            // 1. CREAR ADMIN
+            log("--- Procesando Admin ---");
+            const adminId = await createUser("admin@uvent.cl", "Admin123", "Super Administrador", "admin");
+            
+            // 2. CREAR USUARIOS
+            log("--- Procesando Usuarios ---");
+            const juanId = await createUser("juan@uvent.cl", "User123", "Juan Pérez", "organizer");
+            await createUser("maria@uvent.cl", "User123", "María González", "organizer");
+            await createUser("pedro@uvent.cl", "User123", "Pedro Soto", "organizer");
+
+            // 3. CREAR EVENTOS
+            log("--- Creando Eventos ---");
+            // Usamos el ID del admin (real o falso) para asociar los eventos
+            const ownerId = adminId; 
+            
+            const commonData = {
+                organizerId: ownerId,
+                organizerEmail: "admin@uvent.cl",
+                status: "approved", // Aprobados para que se vean en el index
+                enrolledCount: 0,
+                capacity: 100,
+                location: "Av. Pedro de Valdivia Nº 0300, Temuco"
+            };
+
+            const events = [
+                { 
+                    name: "TicSur (Apertura)", 
+                    date: "2025-11-19", 
+                    time: "09:00",
+                    description: "Gran apertura de la conferencia tecnológica."
+                },
+                { 
+                    name: "TicSur (Workshops)", 
+                    date: "2025-11-20", 
+                    time: "14:00",
+                    description: "Talleres prácticos de IA y Ciberseguridad."
+                },
+                { 
+                    name: "TicSur (Clausura)", 
+                    date: "2025-11-21", 
+                    time: "18:00",
+                    description: "Cierre del evento y networking."
+                }
+            ];
+
+            for (let ev of events) {
+                await createEvent({ ...commonData, ...ev });
+            }
+
+            log("================================", 'success');
+            log("¡INSTALACIÓN FINALIZADA!", 'success');
+            
+            btn.innerText = "¡Ir a la Página Principal!";
+            btn.className = "w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded shadow-lg animate-pulse";
+            btn.onclick = () => window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Panel - UVENT</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="js/tailwind-config.js"></script>
+    <link href="css/styles.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-analytics-compat.js"></script>
+    <script src="js/firebase-config.js"></script>
+    <script src="js/db.js"></script>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans min-h-screen flex flex-col">
+
+    <nav class="bg-white border-b border-gray-200 sticky top-0 z-30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center cursor-pointer" onclick="window.location.href='index.html'">
+                    <span class="text-2xl font-bold tracking-widest brand-font text-gray-900">UVENT</span>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div class="relative">
+                        <button id="btn-notifications" class="text-gray-500 hover:text-brand-green transition relative p-2"><i class="fas fa-bell text-xl"></i><span id="notification-badge" class="absolute top-1 right-1 h-2.5 w-2.5 bg-red-500 rounded-full border border-white hidden"></span></button>
+                        <div id="notifications-dropdown" class="hidden absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-lg border border-gray-100 z-50 overflow-hidden">
+                            <div class="px-4 py-3 border-b border-gray-100 bg-gray-50 flex justify-between items-center"><h3 class="text-sm font-bold text-gray-700">Bandeja de Entrada</h3><span class="text-xs text-gray-400" id="notif-count">0 nuevas</span></div>
+                            <div id="notifications-list" class="max-h-64 overflow-y-auto"><div class="p-4 text-center text-gray-400 text-sm">No tienes notificaciones.</div></div>
+                        </div>
+                    </div>
+                    <div class="hidden md:flex flex-col items-end mr-2"><span class="text-sm font-semibold text-gray-900" id="user-name-display">Cargando...</span><span class="text-xs text-gray-500">Organizador</span></div>
+                    <div class="h-10 w-10 rounded-full bg-gradient-to-r from-brand-green to-teal-400 text-white flex items-center justify-center font-bold shadow-md"><i class="fas fa-user"></i></div>
+                    <button id="btn-logout" class="text-gray-400 hover:text-red-500 transition ml-2" title="Cerrar Sesión"><i class="fas fa-sign-out-alt text-lg"></i></button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full fade-in">
+        <div class="flex flex-col md:flex-row justify-between items-end mb-8 gap-4 border-b border-gray-200 pb-6">
+            <div><h1 class="text-3xl font-bold text-gray-900">Mis Eventos</h1><p class="text-gray-500 mt-1">Gestiona tus solicitudes y revisa el aforo.</p></div>
+            <button id="btn-create-event-user" class="flex items-center gap-2 bg-gray-900 text-white px-5 py-2.5 rounded-lg shadow hover:bg-gray-800 transition transform hover:-translate-y-0.5"><i class="fas fa-plus"></i> Crear Nuevo</button>
+        </div>
+        <div class="grid gap-6" id="user-events-grid"><div class="col-span-1 text-center py-12 text-gray-400 w-full"><i class="fas fa-spinner fa-spin text-2xl"></i> Cargando tus eventos...</div></div>
+    </main>
+
+    <div id="capacityModal" class="fixed inset-0 bg-black/60 hidden flex items-center justify-center z-50 backdrop-blur-sm transition-opacity duration-300">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-0 overflow-hidden transform scale-100 transition-all m-4">
+            <div class="bg-gray-50 px-6 py-4 border-b border-gray-100 flex justify-between items-center"><h3 class="text-lg font-bold text-gray-900" id="modalEventTitle">Evento</h3><button id="closeModal" class="text-gray-400 hover:text-gray-600 transition"><i class="fas fa-times"></i></button></div>
+            <div class="p-6">
+                <div class="flex justify-between items-end mb-2"><span class="text-sm font-medium text-gray-500">Ocupación</span><span class="text-2xl font-bold text-brand-green" id="modalNumbers">0 / 0</span></div>
+                <div class="w-full bg-gray-100 rounded-full h-4 mb-6 overflow-hidden inner-shadow"><div id="modalProgressBar" class="bg-brand-green h-4 rounded-full transition-all duration-1000 ease-out shadow-lg" style="width: 0%"></div></div>
+                <div class="bg-blue-50 border border-blue-100 text-blue-800 text-sm p-4 rounded-xl flex gap-3 items-start"><i class="fas fa-info-circle mt-1 text-blue-500"></i><p>Este evento está activo.</p></div>
+            </div>
+            <div class="bg-gray-50 px-6 py-4 flex justify-end"><button id="closeModalBtn" class="text-gray-600 font-medium hover:bg-gray-200 px-4 py-2 rounded-lg transition">Cerrar</button></div>
+        </div>
+    </div>
+
+    <div id="userOrganizeModal" class="fixed inset-0 bg-black/60 hidden flex items-center justify-center z-50 backdrop-blur-sm transition-all">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl p-0 overflow-hidden transform scale-100 fade-in m-4">
+            <div class="px-8 py-6 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
+                <div><h2 class="text-2xl font-bold text-gray-900">Solicitar Nuevo Evento</h2><p class="text-sm text-gray-500">Completa los detalles.</p></div>
+                <button id="closeUserOrganizeModal" class="text-gray-400 hover:text-gray-600 transition"><i class="fas fa-times text-xl"></i></button>
+            </div>
+            <form class="p-8 space-y-6 max-h-[70vh] overflow-y-auto custom-scrollbar" id="userCreateEventForm">
+                <div class="bg-blue-50 p-3 rounded-lg border border-blue-100 flex gap-3 items-center text-sm text-blue-800"><i class="fas fa-user-check"></i><span>Solicitando como: <strong id="form-user-name">Cargando...</strong></span></div>
+                <div class="space-y-4">
+                    <div><label class="block text-sm font-medium text-gray-700 mb-1">Nombre del Evento</label><input type="text" id="userEventName" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-brand-green focus:border-transparent outline-none" placeholder="Ej: Workshop de Diseño" required></div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <!-- IDs AGREGADOS -->
+                        <div><label class="block text-sm font-medium text-gray-700 mb-1">Fecha</label><input type="date" id="userEventDate" required class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-brand-green outline-none"></div>
+                        <div><label class="block text-sm font-medium text-gray-700 mb-1">Hora</label><input type="time" id="userEventTime" required class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-brand-green outline-none"></div>
+                        <div><label class="block text-sm font-medium text-gray-700 mb-1">Aforo</label><input type="number" id="userEventCap" min="1" placeholder="50" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-brand-green outline-none"></div>
+                    </div>
+                    <!-- IDs AGREGADOS -->
+                    <div><label class="block text-sm font-medium text-gray-700 mb-1">Ubicación</label><input type="text" id="userEventLoc" placeholder="Sala de Conferencias 2" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-brand-green outline-none"></div>
+                    <div><label class="block text-sm font-medium text-gray-700 mb-1">Descripción</label><textarea id="userEventDesc" rows="3" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-brand-green outline-none"></textarea></div>
+                </div>
+                <div class="flex justify-end gap-3 pt-4 border-t border-gray-100 mt-4">
+                    <button type="button" id="cancelUserOrganizeModal" class="px-6 py-2 text-gray-600 font-medium hover:bg-gray-100 rounded-lg transition">Cancelar</button>
+                    <button type="submit" class="px-6 py-2 bg-brand-green text-white font-bold rounded-lg shadow-lg hover:bg-opacity-90 transition transform hover:-translate-y-0.5">Enviar Solicitud</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script src="js/main.js" defer></script>
+</body>
+</html>
